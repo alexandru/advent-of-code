@@ -30,9 +30,9 @@ case class Game(id: Int, sets: List[GameSet]):
                             case ExtractCount(nr, color) => (color, nr.toInt)
                         .toMap
                     GameSet(
-                        red = map.getOrElse("red", 0),
-                        green = map.getOrElse("green", 0),
-                        blue = map.getOrElse("blue", 0)
+                      red = map.getOrElse("red", 0),
+                      green = map.getOrElse("green", 0),
+                      blue = map.getOrElse("blue", 0)
                     )
                 .toList
             Game(id.toInt, sets)
