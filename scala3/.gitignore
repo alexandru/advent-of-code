@@ -30,3 +30,7 @@ metals.sbt
 .idea
 .idea_modules
 /.worksheet/
+
+# Input files
+resources/*.txt
+
