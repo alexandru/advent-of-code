@@ -1,8 +1,10 @@
+package aoc2023.day1
+
 /*
  * <https://adventofcode.com/2023/day/1>
  */
 
-private def part1 =
+def part1 =
     val regex = """\d""".r
     io.Source
         .fromResource("day1.txt")
@@ -15,7 +17,7 @@ private def part1 =
             yield f * 10 + l
         .sum
 
-private def part2 =
+def part2 =
     val regex = """\d|one|two|three|four|five|six|seven|eight|nine""".r
     val digitsMap = Map(
       "one"   -> 1,
@@ -44,7 +46,7 @@ private def part2 =
             yield f * 10 + l
         .sum
 
-@main def day1: Unit =
+@main def run: Unit =
     println("\nDay 1\n------------")
     println(s"Part 1: $part1")
     println(s"Part 2: $part2\n")
