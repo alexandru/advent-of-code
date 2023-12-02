@@ -4,7 +4,6 @@
 
 use regex::Regex;
 
-#[derive(Debug)]
 struct GameSet {
     red: i32,
     green: i32,
@@ -21,7 +20,6 @@ impl GameSet {
     }
 }
 
-#[derive(Debug)]
 struct Game {
     id: i32,
     sets: Vec<GameSet>,
@@ -44,8 +42,8 @@ fn main() {
         blue: 14,
     };
 
-    let game_re = Regex::new(r"^Game\s+(\d+)[:]([^$]+)$").unwrap();
-    let count_re = Regex::new(r"^\s*(\d+)\s+(red|green|blue)\s*$").unwrap();
+    let game_re = Regex::new(r"^Game\s+(?<id>\d+)[:](?<sets>[^$]+)$").unwrap();
+    let count_re = Regex::new(r"^\s*(?<count>\d+)\s+(?<color>red|green|blue)\s*$").unwrap();
 
     let lines: Vec<&str> = include_str!("input.txt").lines().collect();
     let mut games = Vec::new();
@@ -54,11 +52,10 @@ fn main() {
         let Some(m) = game_re.captures(game_raw) else {
             continue;
         };
-        let id = m.get(1).unwrap().as_str().parse::<i32>().unwrap();
-        let sets_raw = m.get(2).unwrap().as_str();
+        let id = m["id"].parse::<i32>().unwrap();
         let mut sets = Vec::new();
 
-        for set_raw in sets_raw.split(";") {
+        for set_raw in m["sets"].split(";") {
             let mut set = GameSet {
                 red: 0,
                 green: 0,
@@ -68,9 +65,8 @@ fn main() {
                 let Some(m) = count_re.captures(color_raw) else {
                     continue;
                 };
-                let count = m.get(1).unwrap().as_str().parse::<i32>().unwrap();
-                let color = m.get(2).unwrap().as_str();
-                match color {
+                let count = m["count"].parse::<i32>().unwrap();
+                match &m["color"] {
                     "red" => set.red = count,
                     "green" => set.green = count,
                     "blue" => set.blue = count,
