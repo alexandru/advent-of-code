@@ -2,8 +2,8 @@
  * <https://adventofcode.com/2023/day/1>
  */
 
-use std::collections::HashMap;
 use regex::Regex;
+use std::collections::HashMap;
 
 fn calculate(re: Regex) -> i32 {
     let digits = HashMap::from([
@@ -35,7 +35,7 @@ fn calculate(re: Regex) -> i32 {
                         .or_else(|| ds.parse::<i32>().ok());
                     first = first.or(di);
                     last = di.or(last);
-                    line = &line[m.start()+1..];
+                    line = &line[m.start() + 1..];
                 }
                 None => {
                     break;

@@ -1,5 +1,9 @@
 package aoc2023.day2
 
+/*
+ * <https://adventofcode.com/2023/day/2>
+ */
+
 case class GameSet(red: Int, green: Int, blue: Int):
     def subsetOf(other: GameSet): Boolean =
         red <= other.red && green <= other.green && blue <= other.blue
