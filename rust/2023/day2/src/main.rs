@@ -78,14 +78,13 @@ fn main() {
         games.push(Game { id, sets });
     }
 
-    let part1 = games.iter()
+    let part1 = games
+        .iter()
         .filter(|g| g.sets.iter().all(|s| s.subset_of(&initial_bag)))
         .map(|g| g.id)
         .sum::<i32>();
 
-    let part2 = games.iter()
-        .map(|g| g.minimum_bag().power())
-        .sum::<i32>();
+    let part2 = games.iter().map(|g| g.minimum_bag().power()).sum::<i32>();
 
     println!("\nDay 2\n------------");
     println!("Part 1: {}", part1);
