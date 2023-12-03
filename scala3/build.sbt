@@ -16,7 +16,7 @@ lazy val y2023 = project
   .in(file("2023"))
   .settings(
     name := "Year 2023",
-    Compile / run / mainClass := Some("aoc2023.day2.run"),
+    Compile / run / mainClass := Some("aoc2023.day3.run"),
   )
 
 lazy val root = project
