@@ -55,13 +55,13 @@ fn main() {
         let id = m["id"].parse::<i32>().unwrap();
         let mut sets = Vec::new();
 
-        for set_raw in m["sets"].split(";") {
+        for set_raw in m["sets"].split(';') {
             let mut set = GameSet {
                 red: 0,
                 green: 0,
                 blue: 0,
             };
-            for color_raw in set_raw.split(",") {
+            for color_raw in set_raw.split(',') {
                 let Some(m) = count_re.captures(color_raw) else {
                     continue;
                 };

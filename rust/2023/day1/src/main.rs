@@ -25,22 +25,12 @@ fn calculate(re: Regex) -> i32 {
         //line = &line[1..];
         let mut first: Option<i32> = Option::None;
         let mut last = first;
-        loop {
-            match re.find(line) {
-                Some(m) => {
-                    let ds = m.as_str();
-                    let di = digits
-                        .get(ds)
-                        .map(|x| x.clone())
-                        .or_else(|| ds.parse::<i32>().ok());
-                    first = first.or(di);
-                    last = di.or(last);
-                    line = &line[m.start() + 1..];
-                }
-                None => {
-                    break;
-                }
-            }
+        while let Some(m) = re.find(line) {
+            let ds = m.as_str();
+            let di = digits.get(ds).cloned().or_else(|| ds.parse::<i32>().ok());
+            first = first.or(di);
+            last = di.or(last);
+            line = &line[m.start() + 1..];
         }
         sum += first.unwrap() * 10 + last.unwrap();
     }

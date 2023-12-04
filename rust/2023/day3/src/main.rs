@@ -4,17 +4,13 @@
 
 use std::collections::{HashMap, HashSet};
 
-fn is_number(ch: char) -> bool {
-    ch >= '0' && ch <= '9'
-}
-
 fn is_special_char(ch: char) -> bool {
-    (ch < '0' || ch > '9') && ch != '.'
+    !ch.is_ascii_digit() && ch != '.'
 }
 
 fn adjacent_coordonates(i: usize, j: usize) -> Vec<(usize, usize)> {
     let (i, j) = (i as i32, j as i32);
-    vec![
+    [
         (i - 1, j - 1),
         (i - 1, j),
         (i - 1, j + 1),
@@ -54,7 +50,7 @@ fn main() {
 
         for j in 0..=line.len() {
             match line.get(j) {
-                Some(ch) if is_number(*ch) => {
+                Some(ch) if ch.is_ascii_digit() => {
                     is_in_number = true;
                     partial_number = partial_number * 10 + (ch.to_digit(10).unwrap() as i32);
 
