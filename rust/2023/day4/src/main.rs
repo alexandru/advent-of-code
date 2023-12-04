@@ -55,7 +55,7 @@ fn main() {
         let mut map: HashMap<usize, usize> = HashMap::new();
         for card in &cards {
             let won_this = map.get(&card.nr).unwrap_or(&0) + 1;
-            map.insert(card.nr, won_this.clone());
+            map.insert(card.nr, won_this);
             let slice = &cards[card.nr..(card.nr + card.good_guesses)];
             for c in slice {
                 let v = map.get(&c.nr).unwrap_or(&0);

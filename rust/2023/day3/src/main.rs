@@ -5,16 +5,16 @@
 use std::collections::{HashMap, HashSet};
 
 fn is_number(ch: char) -> bool {
-    ch >= '0' && ch <= '9'
+    ch.is_ascii_digit()
 }
 
 fn is_special_char(ch: char) -> bool {
-    (ch < '0' || ch > '9') && ch != '.'
+    !ch.is_ascii_digit() && ch != '.'
 }
 
 fn adjacent_coordonates(i: usize, j: usize) -> Vec<(usize, usize)> {
     let (i, j) = (i as i32, j as i32);
-    vec![
+    [
         (i - 1, j - 1),
         (i - 1, j),
         (i - 1, j + 1),
