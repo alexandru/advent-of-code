@@ -16,7 +16,10 @@ lazy val y2023 = project
   .in(file("2023"))
   .settings(
     name := "Year 2023",
-    Compile / run / mainClass := Some("aoc2023.day5.run"),
+    Compile / run / mainClass := Some("aoc2023.day6.run"),
+    libraryDependencies ++= Seq(
+        "org.scalameta" %% "munit" % "0.7.29" % Test,
+    )
   )
 
 lazy val root = project
