@@ -94,15 +94,9 @@ def calculate(layers: List[Layer], seeds: SortedSet[Range]): Long =
     val layers = input.tail.map: layerStr =>
         val lines = layerStr.split("\r?\n").toList
 
-        val key = lines.head match
-        case s"$key map:" => key
-        case _ =>
-            throw RuntimeException(s"Invalid layer: $layerStr")
-
         Layer(lines.tail.map: rangeStr =>
             rangeStr.split("\\s+").map(_.toLong).toList match
-            case List(destStr, srcStr, lenStr) =>
-                val (dest, src, len) = (destStr.toLong, srcStr.toLong, lenStr.toLong)
+            case List(dest, src, len) =>
                 RangeMapping(Range(src, src + len), dest)
             case _ =>
                 throw RuntimeException(s"Invalid line: $rangeStr")
