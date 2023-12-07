@@ -21,7 +21,7 @@ case class Hand(value: String, withJoker: Boolean):
         value.toList.map(ch => cards(ch.toString))
 
     val handType =
-        def evalGroups(groups: List[Int]): HandType =
+        def eval(groups: List[Int]): HandType =
             if groups.exists(_ == 5) then
                 HandType.FiveOfAKind
             else if groups.exists(_ == 4) then
@@ -37,19 +37,19 @@ case class Hand(value: String, withJoker: Boolean):
             else
                 HandType.HighCard
 
-        val permutations =
+        val possibilities =
             if withJoker then Hand.cardsWithJoker.keySet
             else Set("J")
 
-        permutations.map: key =>
-            evalGroups(value
-                .replaceAll("J", key.toString)
-                .view
-                .groupBy(identity)
-                .values
-                .map(_.size)
-                .toList)
-        .maxBy(_.value)
+        possibilities
+            .map(value.replaceAll("J", _))
+            .map: hand =>
+                eval(hand.view
+                    .groupBy(identity)
+                    .values
+                    .map(_.size)
+                    .toList)
+            .maxBy(_.value)
 
 object Hand:
     private def buildCards(str: String) = str
