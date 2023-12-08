@@ -18,16 +18,18 @@ def findPath(start: String, exit: String => Boolean): Long =
     var cursor      = start
     var count       = 0L
     var currentPath = path
+
     while !exit(cursor) do
         val (left, right) = nodes(cursor)
-        if currentPath.isEmpty then
-            currentPath = path
         currentPath.head match
         case "L" =>
             cursor = left
         case "R" =>
             cursor = right
+
         currentPath = currentPath.tail
+        if currentPath.isEmpty then
+            currentPath = path
         count += 1
     count
 
