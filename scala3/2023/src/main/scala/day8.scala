@@ -43,7 +43,6 @@ def lcm(a: BigInt, b: BigInt): BigInt =
         .filter(_.endsWith("A"))
         .map: key =>
             BigInt(findPath(key, _.endsWith("Z")))
-        .toList
         .reduce(lcm(_, _))
 
     println("\nDay 8")

@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use itertools::Itertools;
+use std::{cmp::Ordering, collections::HashMap};
 
 #[derive(Debug, PartialEq, PartialOrd, Eq, Ord, Clone)]
 enum HandType {
@@ -12,17 +12,25 @@ enum HandType {
     HighCard = 0,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Eq, PartialEq)]
 struct Hand {
     value: String,
     num_list: Vec<i32>,
     hand_type: HandType,
 }
 
-impl Ord + PartialOrd for Hand {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        self.hand_type.cmp(&other.hand_type)
-            .then_with(|| self.num_list.cmp(&other.num_list))
+impl Ord for Hand {
+    fn cmp(&self, other: &Self) -> Ordering {
+        match self.hand_type.cmp(&other.hand_type) {
+            Ordering::Equal => self.num_list.cmp(&other.num_list),
+            other => other,
+        }
+    }
+}
+
+impl PartialOrd for Hand {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
     }
 }
 
@@ -40,10 +48,10 @@ struct CardDeck {
 
 impl CardDeck {
     fn new(cards: &str, with_joker: bool) -> CardDeck {
-        let chars = cards.chars().map(|it| it.to_string()).rev().collect_vec();
+        let chars = cards.chars().rev().collect_vec();
         let mut cards = HashMap::new();
         for (i, item) in chars.iter().enumerate() {
-            cards.insert(item.clone(), i as i32);
+            cards.insert(item.to_string(), i as i32);
         }
         CardDeck { cards, with_joker }
     }
@@ -57,7 +65,7 @@ impl CardDeck {
     }
 
     fn hand(&self, value: &str) -> Hand {
-        fn eval(groups: &Vec<i32>) -> HandType {
+        fn eval(groups: &[i32]) -> HandType {
             if groups.iter().any(|it| *it == 5) {
                 HandType::FiveOfAKind
             } else if groups.iter().any(|it| *it == 4) {
@@ -82,13 +90,22 @@ impl CardDeck {
             .map(|it| *self.cards.get(&it).unwrap_or(&0i32))
             .collect_vec();
 
-        let hand_type = self.cards.keys()
-            .map(|it| value.replace("J", it))
+        let possibilities = if self.with_joker {
+            self.cards.keys().map(|it| it.as_str()).collect_vec()
+        } else {
+            vec!["J"]
+        };
+
+        let hand_type = possibilities.iter()
+            .map(|it| value.replace('J', it))
             .map(|hand| {
-                let groups = hand.chars().group_by(|it| *it)
-                  .into_iter()
-                  .map(|it| it.1.count() as i32)
-                  .collect_vec();
+                let groups = hand
+                    .chars()
+                    .sorted()
+                    .group_by(|it| *it)
+                    .into_iter()
+                    .map(|it| it.1.count() as i32)
+                    .collect_vec();
                 eval(&groups)
             })
             .max()
@@ -102,25 +119,45 @@ impl CardDeck {
     }
 }
 
-fn calculate(bids: Vec<Bid>) -> i32 {
-    let mut bids = bids.clone().sort_by_key(|it| it.hand);
-    todo!()
+fn calculate(bids: &[Bid]) -> i32 {
+    bids.iter()
+        .sorted_by_key(|it| &it.hand)
+        .enumerate()
+        .map(|(rank, bid)| bid.bid * (rank as i32 + 1))
+        .sum::<i32>()
 }
 
 fn main() {
-    let part1Deck = CardDeck::part1();
-    let input = include_str!("input.txt").lines()
+    let part1_deck = CardDeck::part1();
+    let part1_bids = include_str!("input.txt")
+        .lines()
         .map(|it| it.split_whitespace().collect_vec())
         .filter_map(|it| {
             if let &[hand, bid] = it.as_slice() {
-                let hand = part1Deck.hand(hand);
-                Some(Bid { hand, bid: bid.parse().unwrap() })
+                let hand = part1_deck.hand(hand);
+                Some(Bid {
+                    hand,
+                    bid: bid.parse().unwrap(),
+                })
             } else {
                 None
             }
         })
         .collect_vec();
+    let part1 = calculate(&part1_bids);
 
+    let part2_deck = CardDeck::part2();
+    let part2_bids = part1_bids
+        .iter()
+        .map(|it| Bid {
+            hand: part2_deck.hand(&it.hand.value),
+            bid: it.bid,
+        })
+        .collect_vec();
+    let part2 = calculate(&part2_bids);
 
-    // let part2Deck = CardDeck::part2();
+    println!("\nDay 7");
+    println!("-----------------");
+    println!("Part 1: {}", part1);
+    println!("Part 2: {}\n", part2)
 }
