@@ -11,7 +11,7 @@ def extrapolate(history: List[Long]): (Long, Long) =
         var all  = List.empty[List[Long]]
         while step.exists(_ != 0) do
             all = step :: all
-            step = step.zip(step.tail).map((x, y) => y - x)
+            step = step.lazyZip(step.tail).map((x, y) => y - x)
         all
 
     all.foldLeft((0L, 0L)):
