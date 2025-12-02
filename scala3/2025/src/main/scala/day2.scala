@@ -5,7 +5,7 @@ import scala.util.matching.Regex
 lazy val invalidA = """^(\d+)\1$""".r
 lazy val invalidB = """^(\d+)\1+$""".r
 
-def sumOfInvalidIDs(p: Regex)(input: String): Long = {
+def sumOfInvalidIDs(p: Regex)(input: String): Long =
   input
     .split("\n")
     .map(_.trim)
@@ -19,7 +19,6 @@ def sumOfInvalidIDs(p: Regex)(input: String): Long = {
         Nil
     }
     .foldLeft(0L)(_ + _)
-}
 
 @main def run(): Unit = {
   val input = io.Source.fromResource("day2.txt").mkString
