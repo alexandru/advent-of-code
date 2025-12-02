@@ -1,22 +1,11 @@
 package aoc2025.day2
 
-def repeatsPartA(n: Long): Boolean = {
-  val s = n.toString
-  val p = s.substring(0, s.length() / 2)
-  s == p * 2
-}
+import scala.util.matching.Regex
 
-def repeatsPartB(n: Long): Boolean = {
-  val s = n.toString
-  (1 to (s.length / 2))
-    .view
-    .map(s.take)
-    .exists { p =>
-      s == p * (s.length() / p.length)
-    }
-}
+lazy val invalidA = """^(\d+)\1$""".r
+lazy val invalidB = """^(\d+)\1+$""".r
 
-def sumOfInvalidIDs(p: Long => Boolean): Long = {
+def sumOfInvalidIDs(p: Regex): Long = {
   io.Source.fromResource("day2.txt")
     .getLines()
     .map(_.trim)
@@ -25,7 +14,7 @@ def sumOfInvalidIDs(p: Long => Boolean): Long = {
     .map(_.split("-").map(_.toLong).toList)
     .flatMap {
       case start :: end :: Nil =>
-        start.to(end).filter(p)
+        start.to(end).filter(n => p.matches(n.toString))
       case _ =>
         Nil
     }
@@ -33,6 +22,6 @@ def sumOfInvalidIDs(p: Long => Boolean): Long = {
 }
 
 @main def run(): Unit = {
-  println(s"Part A: ${sumOfInvalidIDs(repeatsPartA)}")
-  println(s"Part B: ${sumOfInvalidIDs(repeatsPartB)}")
+  println(s"Part A: ${sumOfInvalidIDs(invalidA)}")
+  println(s"Part B: ${sumOfInvalidIDs(invalidB)}")
 }
