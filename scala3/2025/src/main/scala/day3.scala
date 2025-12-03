@@ -24,29 +24,29 @@ def process(charsCount: Int)(input: String): Long = {
     .sum
 }
 
-def part1(input: String): Long = {
-  input.split("\\s*\\n\\s*")
-    .view
-    .map(_.trim)
-    .filter(_.nonEmpty)
-    .map { line =>
-      (0 until line.length - 1)
-        .view
-        .map { i =>
-          (i + 1 until line.length)
-            .map(j => s"${line.charAt(i)}${line.charAt(j)}")
-            .map(_.toLong)
-            .max
-        }
-        .max
-    }
-    .sum
-}
+// def part1(input: String): Long = {
+//   input.split("\\s*\\n\\s*")
+//     .view
+//     .map(_.trim)
+//     .filter(_.nonEmpty)
+//     .map { line =>
+//       (0 until line.length - 1)
+//         .view
+//         .map { i =>
+//           (i + 1 until line.length)
+//             .map(j => s"${line.charAt(i)}${line.charAt(j)}")
+//             .map(_.toLong)
+//             .max
+//         }
+//         .max
+//     }
+//     .sum
+// }
 
 @main def run(): Unit = {
   val input = io.Source.fromResource("day3.txt").mkString
   println("=-----------------------------=")
-  println(s"Part 1: ${part1(input)}")
+  // println(s"Part 1: ${part1(input)}")
   println(s"Part 1: ${process(2)(input)}")
   println(s"Part 2: ${process(12)(input)}")
 }
