@@ -4,24 +4,26 @@ import scala.collection.View
 
 def process(grid: Array[Array[Char]]): Int = {
   var count = 0
-  for i <- grid.indices do {
-    for j <- grid(i).indices do {
-      val neighbors = {
-        val nearby =
-          for {
-            di <- List(-1, 0, 1)
-            dj <- List(-1, 0, 1)
-            if di != 0 || dj != 0
-            ch = grid.lift(i + di).flatMap(_.lift(j + dj)).getOrElse('.')
-          } yield ch
-        nearby.count { ch =>
-          ch == '@' || ch == 'x'
-        }
+  for {
+    i <- grid.indices
+    j <- grid(i).indices
+    if grid(i)(j) == '@'
+  } do {
+    val neighbors = {
+      val nearby =
+        for {
+          di <- List(-1, 0, 1)
+          dj <- List(-1, 0, 1)
+          if di != 0 || dj != 0
+          ch = grid.lift(i + di).flatMap(_.lift(j + dj)).getOrElse('.')
+        } yield ch
+      nearby.count { ch =>
+        ch == '@' || ch == 'x'
       }
-      if neighbors < 4 && grid(i)(j) == '@' then {
-        grid(i)(j) = 'x'
-        count += 1
-      }
+    }
+    if neighbors < 4 then {
+      grid(i)(j) = 'x'
+      count += 1
     }
   }
   count
@@ -40,13 +42,14 @@ def part2(input: View[String]): Int = {
   while !isDone do {
     isDone = true
     count += process(grid)
-
-    for i <- grid.indices do
-      for j <- grid(i).indices do
-        if grid(i)(j) == 'x' then {
-          grid(i)(j) = '.'
-          isDone = false
-        }
+    for {
+      i <- grid.indices
+      j <- grid(i).indices
+      if grid(i)(j) == 'x'
+    } do {
+      grid(i)(j) = '.'
+      isDone = false
+    }
   }
 
   count
