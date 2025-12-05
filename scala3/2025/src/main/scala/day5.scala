@@ -36,7 +36,7 @@ def part1(input: String): Int = {
 def part2(input: String) = {
   val (rangeList, _) = parseInput(input)
   rangeList
-    // Merge ranges
+    // Merge overlapping ranges
     .sortBy(_._1)
     .foldLeft(List.empty[(BigInt, BigInt)]) {
       case (Nil, curr) => List(curr)
@@ -47,6 +47,7 @@ def part2(input: String) = {
           (currStart, currEnd) :: acc
     }
     .reverse
+    // Ranges are no longer overlapping, sum their lengths
     .foldLeft(BigInt(0)) {
       case (sum, (start, end)) =>
         sum + (end - start + 1)
